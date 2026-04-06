@@ -1,6 +1,6 @@
 import {createServer} from 'node:http';
 
-//código com finalidade de criar um CRUD em JS usando node js com dados na memória sobre tarefas em formato JSON
+//código com finalidade de criar um CRUD em JS usando node js (sem o uso de framework) com dados na memória sobre tarefas em formato JSON
 
 // Array para manter as tarefas na memória sem persistência de dados
 let tarefas = [];
