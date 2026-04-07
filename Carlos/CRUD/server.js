@@ -1,6 +1,6 @@
 const { on } = require('node:cluster'); // Henrique: Não precisa desse require pois esse método já é do http ou node:http
 const http = require('node:http');
-const { parse } = require('node:path'); // Henrique: Não precisa desse require pois esse método já é nativo do Node js
+const { parse } = require('node:path'); // Henrique: Não precisa desse require pois esse método já é nativo do JavaScript
 
 const user = [];
 let id = 1;
@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
     res.writeHead(200, { 'content-type': 'application/json' })
     res.end(JSON.stringify(user))
   }
-  else if (url.pathname === "/Purblicar" && req.method == "POST") {
+  else if (url.pathname === "/Purblicar" && req.method == "POST") { //Henrique: nome da rota com erro de português Purblicar -> Publicar
     let body = '';
 
     req.on('data', chunk => {
