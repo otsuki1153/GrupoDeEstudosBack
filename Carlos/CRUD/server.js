@@ -1,6 +1,6 @@
-const { on } = require('node:cluster');
+const { on } = require('node:cluster'); // Henrique: Não precisa desse require pois esse método já é do http ou node:http
 const http = require('node:http');
-const { parse } = require('node:path');
+const { parse } = require('node:path'); // Henrique: Não precisa desse require pois esse método já é nativo do Node js
 
 const user = [];
 let id = 1;
