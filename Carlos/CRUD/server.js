@@ -1,8 +1,7 @@
-const { on } = require('node:cluster'); // Henrique: Não precisa desse require pois esse método já é do http ou node:http
-const http = require('node:http');
-const { parse } = require('node:path'); // Henrique: Não precisa desse require pois esse método já é nativo do JavaScript
 
-const user = [];
+const http = require('node:http');
+
+const users = [];
 let id = 1;
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -16,9 +15,9 @@ const server = http.createServer((req, res) => {
 
   if (url.pathname === "/Pegar" && req.method == "GET") {
     res.writeHead(200, { 'content-type': 'application/json' })
-    res.end(JSON.stringify(user))
+    res.end(JSON.stringify(users))
   }
-  else if (url.pathname === "/Purblicar" && req.method == "POST") { //Henrique: nome da rota com erro de português Purblicar -> Publicar
+  else if (url.pathname === "/Publicar" && req.method == "POST") {
     let body = '';
 
     req.on('data', chunk => {
@@ -29,7 +28,7 @@ const server = http.createServer((req, res) => {
       const NovoUser = JSON.parse(body);
       NovoUser.id = id++;
 
-      user.push(NovoUser);
+      users.push(NovoUser);
 
       res.writeHead(201, { 'content-type': 'application/json' });
       res.end(JSON.stringify(NovoUser));
@@ -51,7 +50,7 @@ const server = http.createServer((req, res) => {
 
       const UserAtualizado = JSON.parse(body);
 
-      const index = user.findIndex(t => t.id === IdRecebido);
+      const index = users.findIndex(t => t.id === IdRecebido);
 
       if (index === -1) {
 
@@ -60,20 +59,20 @@ const server = http.createServer((req, res) => {
 
       }
 
-      user[index] = {
-        ...user[index],
+      users[index] = {
+        ...users[index],
         ...UserAtualizado
       };
 
       res.writeHead(200, { 'content-type': 'application/json' });
-      res.end(JSON.stringify(user[index]));
+      res.end(JSON.stringify(users[index]));
     })
   }
   else if (url.pathname === "/Deleta" && req.method == "DELETE") {
 
     const IdRecebido = parseInt(url.searchParams.get("id"));
 
-    const index = user.findIndex(t => t.id === IdRecebido);
+    const index = users.findIndex(t => t.id === IdRecebido);
 
     if (index === -1) {
 
@@ -82,7 +81,7 @@ const server = http.createServer((req, res) => {
 
     }
 
-    user.splice(index, 1);
+    users.splice(index, 1);
 
     res.writeHead(200);
     res.end();
