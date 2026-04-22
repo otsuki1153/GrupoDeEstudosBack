@@ -1,0 +1,103 @@
+📌 Descrição do Projeto
+
+Este projeto consiste em um servidor HTTP simples criado utilizando apenas o módulo nativo http do Node.js, sem o uso de frameworks como Express. O objetivo principal é entender, na prática, como funcionam conceitos fundamentais como:
+
+- Criação de servidores
+- Manipulação de requisições (req)
+- Respostas (res)
+- Definição de rotas manualmente
+- Uso da API URL para lidar com caminhos e parâmetros
+
+---------------Importação do módulo HTTP---------------
+import {createServer} from 'node:http';
+
+Aqui estamos importando a função createServer do módulo nativo http do Node.js.
+Essa função é responsável por criar um servidor HTTP que poderá escutar requisições.
+
+---------------Definição de porta e host---------------
+const port = 3000;
+const hostname = '127.0.0.1';
+port: define a porta em que o servidor irá rodar (neste caso, 3000).
+hostname: define o endereço local do servidor (127.0.0.1 representa o localhost).
+---------------Criação do servidor---------------
+const server = createServer((req, res) =>{
+
+Aqui criamos o servidor. A função recebe dois parâmetros:
+
+req (request): contém os dados da requisição feita pelo cliente
+res (response): é o objeto utilizado para enviar a resposta ao cliente
+---------------Manipulação da URL---------------
+const url = new URL(req.url, `http://${req.headers.host}`);
+req.url: contém apenas o caminho da requisição (ex: /sobre?nome=Henrique)
+req.headers.host: contém o host completo (ex: 127.0.0.1:3000)
+
+A classe URL permite:
+
+acessar o caminho (pathname)
+acessar parâmetros (searchParams)
+---------------Definição de rotas---------------
+
+As rotas são definidas manualmente utilizando condicionais (if e else if).
+
+---------------Rota / (Página principal)---------------
+if(url.pathname === "/" && req.method === "GET"){
+Método: GET
+Retorna uma mensagem simples:
+res.writeHead(200, {'content-type': 'text/plain'});
+res.end("Bem Vindo(a) ao meu site!!");
+writeHead(200): define status HTTP 200 (sucesso)
+content-type: indica que o retorno é texto simples
+📄 Rota /sobre
+else if(url.pathname === "/sobre" && req.method === "GET"){
+
+Retorna uma mensagem informativa:
+
+"Estou aprendendo Node JS"
+---------------Rota /api---------------
+else if(url.pathname === "/api" && req.method === "GET"){
+
+Retorna um objeto JSON:
+
+{
+  "nome": "Henrique",
+  "curso": "Back End",
+  "status": "Aprendendo node"
+}
+content-type: application/json: informa que a resposta é JSON
+JSON.stringify(): converte o objeto para string JSON
+---------------Rota /hora---------------
+else if(url.pathname === "/hora" && req.method === "GET"){
+Cria um objeto Date com o horário atual:
+const agora = new Date();
+Retorna apenas o horário formatado:
+agora.toLocaleTimeString()
+---------------Rota /saudacao com parâmetro---------------
+else if(url.pathname === "/saudacao" && req.method === "GET"){
+
+Captura um parâmetro da URL:
+
+const name = url.searchParams.get('nome');
+
+Exemplo de uso:
+
+http://localhost:3000/saudacao?nome=Henrique
+
+Resposta:
+
+Ola Henrique
+❌ Rota não encontrada (404)
+else{
+    res.writeHead(404, {'Content-type': 'text/plain'});
+    res.end("ERRO 404");
+}
+
+Caso nenhuma rota seja correspondente, o servidor retorna:
+
+Status: 404 (não encontrado)
+Mensagem: "ERRO 404"
+---------------Inicialização do servidor---------------
+server.listen(port, hostname, ()=>{
+    console.log(`Server rodando no http://${hostname}:${port}/`);
+});
+listen: inicia o servidor
+Callback: exibe no terminal a URL de acesso
