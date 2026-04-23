@@ -1,0 +1,74 @@
+📘 Documentação — server.js
+
+O arquivo server.js é o ponto de entrada da aplicação. Ele é responsável por criar e inicializar um servidor HTTP utilizando o módulo nativo do Node.js, além de realizar o roteamento básico das requisições recebidas.
+
+⚙️ Dependências
+import { createServer } from 'node:http';
+import { defineRoutes } from './routes/chat.routes.js';
+ - Descrição
+createServer: função nativa do Node.js utilizada para criação de servidores HTTP.
+defineRoutes: função importada responsável por tratar as rotas da aplicação.
+
+🌐 Configuração do Servidor
+const port = 3000;
+const hostname = '127.0.0.1';
+ - Descrição
+port: define a porta em que o servidor irá escutar as requisições.
+hostname: define o endereço de rede onde o servidor será executado.
+
+🚀 Criação do Servidor
+const server = createServer((req, res) => {
+ - Parâmetros
+req (IncomingMessage): objeto que contém informações da requisição HTTP.
+res (ServerResponse): objeto utilizado para enviar a resposta ao cliente.
+
+Essa função é executada a cada requisição recebida pelo servidor.
+
+🔗 Processamento da URL
+const url = new URL(req.url, `http://${req.headers.host}`);
+- Descrição
+req.url: contém o caminho da requisição.
+req.headers.host: contém o host da requisição.
+new URL(...): cria um objeto URL completo a partir das informações da requisição.
+Propriedade utilizada
+url.pathname
+Retorna o caminho da URL (ex: /message).
+
+🔀 Roteamento
+if (url.pathname === "/message") {
+    defineRoutes(req, res);
+}
+- Descrição
+Verifica se o caminho da requisição corresponde à rota /message.
+Caso verdadeiro, delega o tratamento da requisição para a função defineRoutes, responsável pela lógica de rotas.
+
+
+❌ Tratamento de Rotas Não Encontradas
+else {
+    res.writeHead(404, { 'content-type': 'text/plain' });
+}
+- Descrição
+Define o código de status HTTP 404 para indicar que a rota não foi encontrada.
+Define o cabeçalho da resposta com o tipo de conteúdo text/plain.
+
+
+▶️ Inicialização do Servidor
+server.listen(port, hostname, () => {
+    console.log(`Server rodando no http://${hostname}:${port}/`);
+});
+- Descrição
+Inicia o servidor HTTP.
+O servidor passa a escutar requisições no endereço e porta definidos.
+A função de callback é executada após a inicialização bem-sucedida do servidor.
+
+🔄 Fluxo de Execução
+Requisição HTTP recebida
+        ↓
+Criação do objeto URL
+        ↓
+Verificação do pathname
+        ↓
+Se "/message" → defineRoutes(req, res)
+        ↓
+Caso contrário → resposta com status 404
+
