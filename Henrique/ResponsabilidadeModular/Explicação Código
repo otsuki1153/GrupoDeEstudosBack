@@ -120,3 +120,95 @@ Verificação do método HTTP
 Se POST → MessageTreatment(req, res)
         ↓
 Caso contrário → resposta 405 (Method Not Allowed)
+
+
+📘 Documentação — controllers/chat.controller.js
+- Descrição
+
+O arquivo chat.controller.js é responsável por tratar as requisições recebidas pela rota de chat.
+Ele atua como intermediário entre a camada de rotas e a camada de serviço, sendo responsável por:
+
+Ler e processar o corpo da requisição
+Converter os dados recebidos para formato JSON
+Extrair as informações necessárias
+Chamar o serviço correspondente
+Retornar a resposta ao cliente
+
+
+⚙️ Dependências
+import { buildReturn } from '../service/chat.service.js';
+- Descrição
+buildReturn: função responsável por processar a mensagem recebida e gerar o objeto de resposta.
+
+
+🎮 Função MessageTreatment
+export function MessageTreatment(req, res){
+- Parâmetros
+req (IncomingMessage): objeto contendo os dados da requisição HTTP.
+res (ServerResponse): objeto utilizado para enviar a resposta ao cliente.
+
+
+📥 Leitura do corpo da requisição
+let mensagem = '';
+
+req.on('data', chunk =>{
+    mensagem += chunk;
+})
+- Descrição
+Inicializa a variável mensagem como string vazia.
+O evento data é disparado sempre que um fragmento do corpo da requisição é recebido.
+Cada chunk é concatenado à variável mensagem.
+
+
+📦 Finalização da leitura
+req.on('end', () =>{
+- Descrição
+O evento end é disparado quando todos os dados da requisição foram recebidos.
+A partir desse ponto, o conteúdo completo da requisição está disponível na variável mensagem.
+
+
+🔄 Conversão para JSON
+const mensagemJson = JSON.parse(mensagem);
+- Descrição
+Converte a string recebida em um objeto JavaScript.
+Espera que o corpo da requisição esteja no formato JSON.
+
+
+📌 Extração de dados
+const text = mensagemJson.text;
+- Descrição
+Extrai a propriedade text do objeto recebido.
+Esse valor será utilizado como entrada para o serviço.
+
+
+⚙️ Chamada do serviço
+const returnObj = buildReturn(text);
+- Descrição
+Chama a função buildReturn, responsável por processar o texto.
+O resultado é armazenado em returnObj.
+
+
+📤 Envio da resposta
+res.writeHead(200, {'content-type':'application/json'});
+res.end(JSON.stringify(returnObj));
+- Descrição
+Define o status HTTP 200 (sucesso).
+Define o tipo de conteúdo como application/json.
+Converte o objeto de resposta para string JSON e envia ao cliente.
+
+
+🔄 Fluxo de Execução
+Requisição recebida
+        ↓
+Leitura do body (evento 'data')
+        ↓
+Finalização da leitura (evento 'end')
+        ↓
+Conversão para JSON
+        ↓
+Extração da propriedade "text"
+        ↓
+Chamada de buildReturn(text)
+        ↓
+Envio da resposta em JSON
+
