@@ -226,6 +226,8 @@ Ele recebe um texto como entrada e retorna um objeto contendo informações deri
 export function buildReturn(text){
 - Parâmetros
 text (string): texto recebido da requisição, utilizado como base para o processamento.
+
+
 ⚙️ Construção da mensagem
 const msg = `{"Original":"${text}", "Tamanho":${text.length}, "Upper":"${text.toUpperCase()}"}`;
 - Descrição
@@ -234,9 +236,9 @@ Uma string no formato JSON é construída utilizando template string.
 
 Propriedades geradas:
 Propriedade	Descrição
-Original	Texto original recebido
-Tamanho	Quantidade de caracteres do texto (text.length)
-Upper	Texto convertido para letras maiúsculas (text.toUpperCase())
+Original ------>	Texto original recebido
+Tamanho	 ------> Quantidade de caracteres do texto (text.length)
+Upper	   ------> Texto convertido para letras maiúsculas (text.toUpperCase())
 
 🔄 Conversão para objeto JSON
 const JsonMsg = JSON.parse(msg);
