@@ -72,6 +72,7 @@ Se "/message" → defineRoutes(req, res)
         ↓
 Caso contrário → resposta com status 404
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 📘 Documentação — routes/chat.routes.js
 - Descrição
@@ -121,6 +122,7 @@ Se POST → MessageTreatment(req, res)
         ↓
 Caso contrário → resposta 405 (Method Not Allowed)
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 📘 Documentação — controllers/chat.controller.js
 - Descrição
@@ -212,3 +214,65 @@ Chamada de buildReturn(text)
         ↓
 Envio da resposta em JSON
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📘 Documentação — service/chat.service.js
+- Descrição
+
+O arquivo chat.service.js é responsável por implementar a lógica de processamento da mensagem recebida pelo sistema.
+Ele recebe um texto como entrada e retorna um objeto contendo informações derivadas desse texto.
+
+🎯 Função buildReturn
+export function buildReturn(text){
+- Parâmetros
+text (string): texto recebido da requisição, utilizado como base para o processamento.
+⚙️ Construção da mensagem
+const msg = `{"Original":"${text}", "Tamanho":${text.length}, "Upper":"${text.toUpperCase()}"}`;
+- Descrição
+
+Uma string no formato JSON é construída utilizando template string.
+
+Propriedades geradas:
+Propriedade	Descrição
+Original	Texto original recebido
+Tamanho	Quantidade de caracteres do texto (text.length)
+Upper	Texto convertido para letras maiúsculas (text.toUpperCase())
+
+🔄 Conversão para objeto JSON
+const JsonMsg = JSON.parse(msg);
+- Descrição
+Converte a string JSON armazenada em msg para um objeto JavaScript.
+O resultado é armazenado na variável JsonMsg.
+
+📤 Retorno da função
+return JsonMsg;
+- Descrição
+Retorna o objeto JavaScript contendo as informações processadas da mensagem.
+
+
+🔄 Fluxo de Execução
+Recebe texto (text)
+        ↓
+Cria string JSON com propriedades derivadas
+        ↓
+Converte string para objeto (JSON.parse)
+        ↓
+Retorna objeto resultante
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Conclusão
+
+Este projeto apresenta uma implementação de servidor HTTP utilizando Node.js puro, sem o uso de frameworks, evidenciando de forma clara o funcionamento interno de uma aplicação backend.
+
+A estrutura foi organizada em camadas bem definidas — server, routes, controllers e service — onde cada módulo possui uma responsabilidade específica dentro do fluxo da aplicação. Essa separação permite que o processamento das requisições seja conduzido de forma estruturada, desde o recebimento da requisição HTTP até a geração da resposta final em formato JSON.
+
+O fluxo implementado demonstra, na prática, conceitos fundamentais como:
+
+Criação de servidor HTTP com módulos nativos
+Processamento manual de URL e roteamento
+Manipulação de streams para leitura do corpo da requisição
+Conversão e tratamento de dados em JSON
+Encadeamento de responsabilidades entre camadas
+
+Dessa forma, o projeto serve como uma base sólida para compreensão do funcionamento de aplicações backend, permitindo visualizar de maneira detalhada como cada etapa do processamento ocorre internamente, desde o nível mais baixo da requisição até a resposta enviada ao cliente.
