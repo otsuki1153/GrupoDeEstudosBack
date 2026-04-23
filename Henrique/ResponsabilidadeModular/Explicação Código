@@ -72,3 +72,51 @@ Se "/message" → defineRoutes(req, res)
         ↓
 Caso contrário → resposta com status 404
 
+
+📘 Documentação — routes/chat.routes.js
+- Descrição
+
+O arquivo chat.routes.js é responsável por definir o roteamento das requisições relacionadas ao módulo de chat.
+Ele atua como intermediário entre o servidor (server.js) e o controller, decidindo qual função será executada com base no método HTTP da requisição.
+
+⚙️ Dependências
+import { MessageTreatment } from '../controllers/chat.controller.js';
+- Descrição
+MessageTreatment: função importada do controller responsável por tratar a lógica da requisição de chat.
+
+🔀 Definição de Rotas
+export function defineRoutes(req, res){
+- Parâmetros
+req (IncomingMessage): objeto que contém os dados da requisição HTTP.
+res (ServerResponse): objeto utilizado para enviar a resposta ao cliente.
+
+A função defineRoutes é responsável por analisar o método da requisição e direcionar para o tratamento adequado.
+
+📥 Verificação do Método HTTP
+if(req.method === "POST"){
+    MessageTreatment(req, res);
+}
+- Descrição
+Verifica se o método da requisição é POST.
+Caso verdadeiro, chama a função MessageTreatment, responsável por processar a requisição.
+
+
+❌ Tratamento de Método Não Permitido
+else {
+    res.writeHead(405, {'content-type': 'text/plain'});
+    res.end("Rota errada");
+}
+- Descrição
+Define o código de status HTTP 405 (Method Not Allowed), indicando que o método utilizado não é permitido para esta rota.
+Define o cabeçalho da resposta como text/plain.
+Encerra a resposta enviando a mensagem "Rota errada".
+
+
+🔄 Fluxo de Execução
+Requisição recebida (req, res)
+        ↓
+Verificação do método HTTP
+        ↓
+Se POST → MessageTreatment(req, res)
+        ↓
+Caso contrário → resposta 405 (Method Not Allowed)
