@@ -25,13 +25,13 @@ O foco está no aprendizado contínuo, na experimentação e na construção de 
 A organização dos arquivos segue uma estrutura simples para facilitar o entendimento:
 
 /NomeDoParticipante
-    /TemaOuAula
+    /TemaOuAula/
         arquivo.ext
 
 Exemplo:
 
 /Henrique
-    /ServidorHTTP
+    /ServidorHTTP/
         server.js
 
 🚀 Como Executar os Projetos
