@@ -1,5 +1,4 @@
 import { createServer } from 'node:http';
-// Ajustado o caminho para a pasta correta do seu módulo de rotas
 import { defineRoutes } from './Modules/routes/chat_routes.js';
 
 
@@ -22,3 +21,4 @@ server.listen(port, hostname, () => {
     console.log(`Server rodando no http://${hostname}:${port}/`);
 });
 // Inicia o servidor e exibe uma mensagem no console indicando que o servidor está rodando
+
