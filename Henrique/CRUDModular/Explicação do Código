@@ -1,0 +1,231 @@
+📘 Documentação — server.js (CRUD Modular)
+-- Descrição
+
+O arquivo server.js implementa um servidor HTTP utilizando Node.js puro, com o objetivo de demonstrar a organização de um CRUD (Create, Read, Update, Delete) de forma modular, sem o uso de frameworks.
+
+O roteamento inicial é feito neste arquivo, que direciona as requisições para módulos responsáveis por tratar as operações de CRUD e busca.
+
+⚙️ Dependências
+import { createServer } from 'node:http';
+import { routeCRUD, routeSearch } from './route/task.routes.js';
+- Descrição
+createServer: função nativa do Node.js utilizada para criar servidores HTTP.
+routeCRUD: função responsável por tratar as operações de criação, leitura, atualização e remoção.
+routeSearch: função responsável pela busca de tarefas.
+
+🌐 Configuração do Servidor
+const port = 3000;
+const hostname = '127.0.0.1';
+- Descrição
+port: define a porta onde o servidor será executado.
+hostname: define o endereço local onde o servidor estará disponível.
+
+🔗 Processamento da URL
+const url = new URL(req.url, `http://${req.headers.host}`);
+- Descrição
+req.url: contém o caminho da requisição.
+req.headers.host: contém o host da requisição.
+new URL(...): cria um objeto URL completo para facilitar a manipulação.
+
+🔀 Roteamento
+if(url.pathname === "/task"){
+    routeCRUD(req, res);
+} else if(url.pathname === "/pesquisa"){
+    routeSearch(req, res);
+}
+- Descrição
+/task: direciona para o módulo responsável pelo CRUD.
+/pesquisa: direciona para o módulo responsável pela busca de tarefas.
+
+❌ Tratamento de Rotas Não Encontradas
+res.writeHead(404, {'content-type':'text/plain'});
+res.end("Página não encontrada");
+- Descrição
+Retorna status HTTP 404 quando a rota não existe.
+Envia mensagem de erro em formato texto.
+
+▶️ Inicialização do Servidor
+server.listen(port, hostname, ()=>{
+    console.log(`Server rodando no http://${hostname}:${port}/`);
+});
+- Descrição
+Inicia o servidor HTTP.
+Permite acesso através do endereço e porta definidos.
+Exibe no terminal a URL do servidor.
+
+📘 Documentação — route/task.routes.js
+-- Descrição
+
+O arquivo task.routes.js é responsável por definir o roteamento com base no método HTTP, direcionando cada operação para o controller correspondente.
+
+⚙️ Dependências
+import {controllPOST, controllPUT, controllGET, controllSEARCH, controllDELETE} from '../controller/task.controller.js';
+- Descrição
+Cada função importada representa uma operação específica do CRUD ou busca.
+
+🔀 Função routeCRUD
+export function routeCRUD(req, res){
+- Descrição
+
+Responsável por tratar as operações CRUD na rota /task.
+
+📥 POST
+controllPOST(req,res);
+
+Cria uma nova tarefa.
+
+📥 PUT
+controllPUT(req, res);
+
+Atualiza uma tarefa existente.
+
+📥 GET
+controllGET(res);
+
+Retorna todas as tarefas.
+
+📥 DELETE
+controllDELETE(req, res);
+
+Remove uma tarefa.
+
+❌ Método não permitido
+res.writeHead(404,{'content-type':'text/plain'});
+res.end("Rota inexistente");
+
+Retorna erro caso o método HTTP não seja suportado.
+
+🔍 Função routeSearch
+export function routeSearch(req, res){
+- Descrição
+
+Responsável pela busca de tarefas.
+
+📥 GET
+controllSEARCH(req, res);
+
+Retorna uma tarefa específica com base no ID.
+
+📘 Documentação — controller/task.controller.js
+-- Descrição
+
+O arquivo task.controller.js é responsável por intermediar a comunicação entre as rotas e os serviços.
+
+Ele realiza:
+
+Leitura do corpo da requisição
+Extração de dados
+Chamada das funções de serviço
+Envio da resposta ao cliente
+
+⚙️ Dependências
+import {PostService, PutService, GetService, SearchService, DeleteService} from '../service/task.service.js';
+
+📥 controllPOST
+export function controllPOST(req, res){
+- Descrição
+Lê o corpo da requisição via stream (data e end).
+Converte os dados para JSON.
+Extrai o campo title.
+Chama PostService para criar a tarefa.
+Retorna a tarefa criada em formato JSON.
+
+📥 controllPUT
+export function controllPUT(req, res){
+- Descrição
+Obtém o id via parâmetro da URL.
+Lê o corpo da requisição.
+Chama PutService para atualizar a tarefa.
+Retorna a tarefa atualizada ou erro caso não encontrada.
+
+📥 controllGET
+export function controllGET(res){
+- Descrição
+Chama GetService.
+Retorna a lista de tarefas.
+
+📥 controllSEARCH
+export function controllSEARCH(req, res){
+- Descrição
+Obtém o id via URL.
+Chama SearchService.
+Retorna a tarefa correspondente.
+
+📥 controllDELETE
+export function controllDELETE(req, res){
+- Descrição
+Obtém o id via URL.
+Chama DeleteService.
+Remove a tarefa do sistema.
+
+📘 Documentação — service/task.service.js
+-- Descrição
+
+O arquivo task.service.js contém a lógica de negócio da aplicação, sendo responsável pela manipulação dos dados em memória.
+
+🗂️ Estruturas de Dados
+let tarefas = [];
+let id = 0;
+- Descrição
+tarefas: array que armazena as tarefas.
+id: variável usada para gerar identificadores únicos.
+
+📥 PostService
+export function PostService(title){
+- Descrição
+Cria uma nova tarefa com id e title.
+Adiciona ao array tarefas.
+Retorna a tarefa criada.
+
+📥 PutService
+export function PutService(idRecebido, newtitle){
+- Descrição
+Localiza a tarefa pelo ID.
+Atualiza os dados utilizando merge de objetos.
+Retorna a tarefa atualizada.
+
+📥 GetService
+export function GetService(){
+- Descrição
+Retorna todas as tarefas armazenadas.
+
+📥 SearchService
+export function SearchService(idRecebido){
+- Descrição
+Busca uma tarefa pelo ID.
+Retorna a tarefa encontrada.
+
+📥 DeleteService
+export function DeleteService(idRecebido){
+- Descrição
+Remove a tarefa do array.
+Retorna o resultado da operação.
+
+🔄 Fluxo Geral da Aplicação
+Requisição HTTP
+        ↓
+server.js
+        ↓
+routes
+        ↓
+controller
+        ↓
+service
+        ↓
+resposta ao cliente
+
+Conclusão
+
+Este projeto demonstra a implementação de um CRUD completo utilizando Node.js puro, com uma arquitetura modular bem definida e sem o uso de frameworks. A aplicação está organizada em camadas (server, routes, controller e service), onde cada módulo possui uma responsabilidade específica dentro do fluxo de execução.
+
+A separação de responsabilidades permite que o sistema seja mais legível, escalável e de fácil manutenção, além de evidenciar claramente o papel de cada camada no processamento das requisições HTTP — desde o roteamento inicial até a manipulação dos dados em memória.
+
+Ao longo da implementação, são aplicados conceitos fundamentais de desenvolvimento backend, como:
+
+Criação de servidor HTTP com módulos nativos
+Roteamento manual baseado em URL e método HTTP
+Manipulação de streams para leitura do corpo da requisição
+Processamento e conversão de dados em JSON
+Organização em arquitetura modular
+
+Dessa forma, o projeto serve como uma base sólida para compreensão do funcionamento interno de APIs, permitindo visualizar de forma clara e detalhada como uma aplicação backend opera sem abstrações externas, facilitando o aprendizado e a evolução para estruturas mais avançadas.
