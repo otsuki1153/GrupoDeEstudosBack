@@ -1,11 +1,15 @@
 
-import { Create_Message, Get_Message } from "../controller/chat_controller.js";
+import { Create_Message, Get_Message, Update_Message, Select_Message } from "../controller/chat_controller.js";
 
 export function defineRoutes(req, res) {
     if (req.method === "POST") {
         Create_Message(req, res);
     } else if (req.method === "GET") {
         Get_Message(req, res);
+    } else if (req.method === "PUT") {
+        Update_Message(req, res);
+    } else if (req.method === "DELETE") {
+        Select_Message(req, res);
     } else {
         res.writeHead(405, { 'content-type': 'text/plain' });
         res.end("Rota errada");
