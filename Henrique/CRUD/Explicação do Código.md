@@ -70,7 +70,7 @@ url.searchParams → parâmetros de consulta.
 
 Retorna todas as tarefas armazenadas.
 
-res.writeHead(200, {'content-type': 'application/json'});
+res.writeHead(200, { 'content-type': 'application/json' });
 res.end(JSON.stringify(tarefas));
 📄 POST /tarefas
 
