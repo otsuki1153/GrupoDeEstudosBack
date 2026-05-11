@@ -1,9 +1,7 @@
 📘 CRUD de Tarefas com Node.js Puro
 📌 Introdução
 
-O projeto CRUD tem como objetivo demonstrar a construção de uma API REST completa utilizando exclusivamente recursos nativos do Node.js
-, sem a utilização de frameworks como Express
-.
+O projeto CRUD tem como objetivo demonstrar a construção de uma API REST completa utilizando exclusivamente recursos nativos do Node.js, sem a utilização de frameworks como Express.
 
 A aplicação implementa as quatro operações fundamentais de um sistema CRUD (Create, Read, Update, Delete) para o gerenciamento de tarefas, armazenando os dados temporariamente em memória por meio de um array JavaScript.
 
