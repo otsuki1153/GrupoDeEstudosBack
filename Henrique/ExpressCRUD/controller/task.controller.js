@@ -2,7 +2,7 @@ import {GetService, PostService, PutService, DeleteService, SearchService} from 
 
 export function GetControll(req, res){
     const Objlist = GetService();
-    res.json(Objlist); 
+    return res.json(Objlist); 
 }
 
 export function SearchControll(req, res){
