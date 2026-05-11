@@ -9,5 +9,5 @@ app.use(express.json());
 app.use("/tasks", TaskRouter);
 
 app.listen(PORT, () =>{
-    console.log(`API rodando na porta ${PORT}`)
+    console.log(`API rodando na url http://localhost:${PORT}`);
 });
