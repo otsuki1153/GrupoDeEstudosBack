@@ -2,7 +2,7 @@
 
 # 📌 Introdução
 
-O projeto **ExpressCRUD** é uma API REST desenvolvida com urlExpress[https://expressjs.com/](https://expressjs.com/) sobre a plataforma urlNode.js[https://nodejs.org/](https://nodejs.org/), com o objetivo de demonstrar a implementação de um CRUD (*Create, Read, Update, Delete*) de tarefas.
+O projeto **ExpressCRUD** é uma API REST desenvolvida com url Express [https://expressjs.com/](https://expressjs.com/) sobre a plataforma url Node.js [https://nodejs.org/](https://nodejs.org/), com o objetivo de demonstrar a implementação de um CRUD (*Create, Read, Update, Delete*) de tarefas.
 
 A aplicação segue uma arquitetura em camadas, separando claramente as responsabilidades em quatro módulos principais:
 
