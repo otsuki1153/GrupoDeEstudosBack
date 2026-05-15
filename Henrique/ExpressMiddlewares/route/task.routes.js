@@ -3,25 +3,15 @@ import {GetControll, SearchControll, PostControll, PutControll, DeleteControll} 
 
 const route = Router();
 
-route.get("/", (req,res) =>{
-    GetControll(req, res);
-});
+route.get("/", GetControll);
 
-route.get("/:id", (req,res) =>{
-    SearchControll(req, res);
-});
+route.get("/:id", SearchControll);
 
-route.post("/", (req,res) =>{
-    PostControll(req, res);
-});
+route.post("/", PostControll);
 
 
-route.put("/:id", (req,res) =>{
-    PutControll(req, res);
-});
+route.put("/:id", PutControll);
 
-route.delete("/:id", (req,res) =>{
-    DeleteControll(req,res);
-});
+route.delete("/:id", DeleteControll);
 
 export default route;
