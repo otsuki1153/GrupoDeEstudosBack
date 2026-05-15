@@ -23,9 +23,9 @@ export function SearchControll(req, res){
 
 export function PostControll(req,res){
     const JSONtitle = req.body.title;
-    if(JSONtitle === null){
-        return res.status(400).send("Corpo incompleto");
-    }
+    // if(JSONtitle === null){
+    //     return res.status(400).send("Corpo incompleto");
+    // }
     const PostedOBJ = PostService(JSONtitle);
     res.status(201).json(PostedOBJ);
 }
@@ -39,7 +39,7 @@ export function PutControll(req,res){
     const AlteredOBJ = PutService(JSONbody, ParamId);
 
     if (AlteredOBJ === null){
-        res.status(404).send("Tarefa não encontrada");
+        return res.status(404).send("Tarefa não encontrada");
     } else{
         res.json(AlteredOBJ);
     }
