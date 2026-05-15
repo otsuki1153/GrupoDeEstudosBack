@@ -1,0 +1,4 @@
+1. Criar o package.json
+2. Criar o package-lock.json
+3. criar middleware de autenticação
+4. criar middleware de validadação
