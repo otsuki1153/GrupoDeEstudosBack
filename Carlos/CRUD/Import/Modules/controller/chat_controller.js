@@ -1,4 +1,4 @@
-import { Build_Return, Get_Static_Message, Update_Data, Delete_Message } from "../service/chat_service.js";
+import { Build_Return, Get_Array_Message, Update_Data, Delete_Message } from "../service/chat_service.js";
 
 export function Create_Message(req, res) {//Post
     let mensagem = "";
@@ -22,13 +22,13 @@ export function Create_Message(req, res) {//Post
 //O código trata os dados recebidos em uma requisição HTTP, processa o texto usando a função Build_Return e retorna a resposta em formato JSON para o cliente
 
 export function Get_Message(req, res) {//Get
-    const Message_Static = Get_Static_Message();
-    //Aqui estamos chamando a função Get_Static_Message para obter a mensagem estática que será retornada na resposta da requisição GET.
+    const Message_Content = Get_Array_Message();
+    //Aqui estamos chamando a função Get_Array_Message para obter as mensagens existentes. O resultado é armazenado na variável Message_Content.
 
     res.writeHead(200, { 'content-type': 'application/json' });
-    res.end(JSON.stringify(Message_Static));
+    res.end(JSON.stringify(Message_Content));
 }
-//Essa função lida com as requisições GET, retornando uma mensagem estática em formato JSON. Transforma o objeto gerado pela função Get_Static_Message diretamente em string JSON.
+//O código chama a função Get_Array_Message para obter as mensagens existentes e retorna a resposta em formato JSON para o cliente.
 
 export function Update_Message(req, res) {//Put
 
@@ -74,7 +74,13 @@ export function Select_Message(req, res) {//Delete
     // Aqui estamos obtendo o ID da mensagem a ser deletada a partir dos parâmetros da URL. O ID é usado para identificar qual mensagem deve ser deletada. 
     // O parseInt é usado para converter o ID de string para número inteiro, garantindo que seja do tipo correto para a função Delete_Message.
 
-    Delete_Message(id_recebido);
+    const sucesso = Delete_Message(id_recebido);
     //Aqui estamos chamando a função Delete_Message, passando o ID da mensagem a ser deletada.
-
+    if (sucesso) {
+        res.writeHead(200, { 'content-type': 'text/plain' });
+        res.end("Mensagem deletada com sucesso");
+    } else {
+        res.writeHead(404, { 'content-type': 'text/plain' });
+        res.end("Id não encontrado");
+    }
 }
