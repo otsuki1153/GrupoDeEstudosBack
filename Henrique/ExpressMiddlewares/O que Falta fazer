@@ -1,2 +1,2 @@
 1. Criar o package.json (npm init)
-2. Criar o package-lock.json (npm install express, npm install helmet, npm install cors)
+2. Criar o package-lock.json (npm install express, npm install helmet, npm install cors, npm install zod)
