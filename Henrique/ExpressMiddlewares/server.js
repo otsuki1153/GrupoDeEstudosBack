@@ -4,6 +4,11 @@ import helmet from 'helmet';
 import cors from 'cors';
 import TaskRouter from './route/task.routes.js';
 
+import error from './middlewares/error.middleware.js';
+import logger from './middlewares/logger.middleware.js';
+import notFound from './middlewares/notFound.middleware.js';
+import validation from './middlewares/validation.middleware.js';
+
 const app = express();
 const PORT = 3000;
 const corsOp = {
@@ -15,51 +20,18 @@ const limit = rateLimit({
 });
 
 app.use(express.json());
-
-app.use((req,res,next) =>{
-    console.log(
-        `[${new Date().toLocaleDateString()} ${req.method} ${req.originalUrl}]`
-    );
-    next();
-});
-
+app.use(logger);
 app.use(helmet());
 app.use(cors(corsOp));
 app.use(limit);
+app.use(validation);
 
-app.use((req, res,next) =>{
-    if(req.method === "GET" || req.method === "DELETE"){
-        return next();
-    }
-    if(!Object.hasOwn(req.body, 'title')){
-        return res.status(400).send("Error 400 Bad Request");
-    }
-    if(typeof req.body.title !== "string"){
-        return res.status(400).send("Error 400 Bad Request");
-    }
-    if(req.body.title.trim() === ""){
-        return res.status(400).send("Error 400 Bad Request");
-    }
-    next();
-});
 
 app.use("/tasks", TaskRouter);
 
-app.use((req,res) =>{
-    res.status(404).json({
-        error:"Rota não encontrada"
-    })
-});
-
-app.use((err, req, res,next) =>{
-    console.log(err);
-    res.status(500).json({
-        error: "Erro interno do servidor"
-    });
-});
-
+app.use(notFound);
+app.use(error);
 
 app.listen(PORT, () =>{
     console.log(`API rodando na porta ${PORT}`)
 });
-
