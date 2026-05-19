@@ -9,13 +9,13 @@ export function SearchControll(req, res){
     const ParamId = parseInt(req.params.id);
 
     if (isNaN(ParamId)) {
-        return res.status(400).send("ID inválido");
+        return res.status(400).json({ error : "ID inválido" });
     }
 
     const Objlist = SearchService(ParamId);
 
     if(Objlist === null){
-        return res.status(404).send("Tarefa não encontrada");
+        return res.status(404).json({ error : "Tarefa não encontrada" });
     } else{
         res.json(Objlist); 
     }
@@ -33,13 +33,13 @@ export function PostControll(req,res){
 export function PutControll(req,res){
     const ParamId = parseInt(req.params.id);
     if (isNaN(ParamId)) {
-        return res.status(400).send("ID inválido");
+        return res.status(400).json({ error : "ID inválido" });
     }
     const JSONbody = req.body;
     const AlteredOBJ = PutService(JSONbody, ParamId);
 
     if (AlteredOBJ === null){
-        return res.status(404).send("Tarefa não encontrada");
+        return res.status(404).json({ error : "Tarefa não encontrada" });
     } else{
         res.json(AlteredOBJ);
     }
@@ -48,12 +48,12 @@ export function PutControll(req,res){
 export function DeleteControll(req,res){
     const ParamId = parseInt(req.params.id);
     if (isNaN(ParamId)) {
-        return res.status(400).send("ID inválido");
+        return res.status(400).json({ error : "ID inválido" });
     }
     const ItemDeleted = DeleteService(ParamId);
 
     if(!ItemDeleted){
-        res.status(404).send("Tarefa não encontrada");
+        res.status(404).json({ error : "Tarefa não encontrada" });
     } else{
         res.status(204).send();
     }
