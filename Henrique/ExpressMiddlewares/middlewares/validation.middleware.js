@@ -23,7 +23,7 @@ export default function validationMiddleware(req, res,next) {
 
     if(!result.success){
         return res.status(400).json({
-            errors: result.error.issues.map(issues =>({
+            errors: result.error.issues.map(issue =>({
                 field: issue.path.join("."),
                 message: issue.message
             }))
