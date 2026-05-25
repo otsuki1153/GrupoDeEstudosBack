@@ -1,0 +1,15 @@
+# Dependências
+node_modules/
+
+# Logs do Node
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de variáveis de ambiente (onde ficam senhas e chaves)
+.env
+.env.local
+
+# Pastas de build (TypeScript)
+dist/
+build/
