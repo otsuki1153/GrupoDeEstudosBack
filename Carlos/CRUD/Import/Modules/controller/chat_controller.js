@@ -22,8 +22,20 @@ export function Create_Message(req, res) {//Post
 //O código trata os dados recebidos em uma requisição HTTP, processa o texto usando a função Build_Return e retorna a resposta em formato JSON para o cliente
 
 export function Get_Message(req, res) {//Get
-    const Message_Content = Get_Array_Message();
-    //Aqui estamos chamando a função Get_Array_Message para obter as mensagens existentes. O resultado é armazenado na variável Message_Content.
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    //Aqui estamos criando um objeto URL a partir da URL da requisição e do host, o que nos permite acessar os parâmetros da URL de forma mais fácil.
+    const IdRecebido = url.searchParams.get("id");
+    //Aqui estamos obtendo o ID da mensagem a ser buscada a partir dos parâmetros da URL. O ID é usado para identificar qual mensagem deve ser retornada.
+    //Se o ID não for fornecido, a função Get_Array_Message retornará todas as mensagens.
+
+    let Message_Content;
+
+    if (IdRecebido) {
+        Message_Content = Get_Array_Message(parseInt(IdRecebido));
+    } else {
+        Message_Content = Get_Array_Message();
+    }
+    //Aqui verificamos se existe um ID na URL. Se existir, passamos para o Service buscar a mensagem específica. Se não, o Service retorna todas.
 
     res.writeHead(200, { 'content-type': 'application/json' });
     res.end(JSON.stringify(Message_Content));
