@@ -1,5 +1,5 @@
 import { Router } from "express";
-//Import dos controllers para serem usados nas rotas
+import { GetControll, SearchControll, PostControll, PutControll, DeleteControll } from "../Controller/task.controller";
 
 let router = Router();
 
