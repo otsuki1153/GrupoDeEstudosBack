@@ -1,3 +1,6 @@
 {
+    "name": "require",
+    "description": "CRUD usando require",
+    "version": "1.0.0",
     "type": "commonjs"
 }
