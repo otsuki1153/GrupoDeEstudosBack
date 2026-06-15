@@ -6,6 +6,7 @@
     "CRUD/require",
     "CRUD/import",
     "CRUD/express",
-    "express_middlewares"
+    "express_middlewares",
+    "game_vault"
   ]
 }
