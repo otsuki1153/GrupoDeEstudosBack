@@ -1,5 +1,5 @@
 
-export const RequestLogger = (req,res,next) =>{
+/* export const RequestLogger = (req,res,next) =>{
     // Guarda o tempo de início da requisição
     const StartTime = process.hrtime();
     // Guarda o método e a URL da requisição
@@ -26,5 +26,12 @@ export const RequestLogger = (req,res,next) =>{
         );
     });
     // Chama o próximo middleware ou rota para continuar o processamento da requisição
+    next();
+} */
+
+export const logger = (req, res, next) => {
+
+    console.log (` Metodo utilizado: ${req.method} - URL: ${req.url}`);
+
     next();
 }
