@@ -1,0 +1,14 @@
+{
+    "name": "game_vault",
+    "version": "1.0.0",
+    "description": "Um cofre de protótipos de jogos indie.",
+    "main": "src/app.js",
+    "type": "module",
+    
+    "scripts": {
+        "dev": "node --watch src/app.js" 
+    },
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}

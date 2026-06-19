@@ -1,7 +1,8 @@
 import express from 'express';
-import routes from './routes/routes.js';
+import routes from './routes/routes.js'
 import { logger } from './middlewares/logger.js';
 import { notFound } from './middlewares/notFound.js';
+import { errorHandle } from './middlewares/errorHandle.js';
 
 //import dos middlewares:logger, rate-limite, helmet, cors, logger, notFound, error e validation 
 
@@ -17,6 +18,7 @@ app.use(logger);
 app.use("/games", routes);
 
 app.use(notFound);
+app.use(errorHandle);
 
 app.listen(PORT, () => {
     console.log(`Servidor rodando na URL http://localhost:${PORT}`);
