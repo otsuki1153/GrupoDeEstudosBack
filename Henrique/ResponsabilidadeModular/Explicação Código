@@ -1,0 +1,280 @@
+📘 Documentação — server.js
+
+O arquivo server.js é o ponto de entrada da aplicação. Ele é responsável por criar e inicializar um servidor HTTP utilizando o módulo nativo do Node.js, além de realizar o roteamento básico das requisições recebidas.
+
+⚙️ Dependências
+import { createServer } from 'node:http';
+import { defineRoutes } from './routes/chat.routes.js';
+ - Descrição
+createServer: função nativa do Node.js utilizada para criação de servidores HTTP.
+defineRoutes: função importada responsável por tratar as rotas da aplicação.
+
+🌐 Configuração do Servidor
+const port = 3000;
+const hostname = '127.0.0.1';
+ - Descrição
+port: define a porta em que o servidor irá escutar as requisições.
+hostname: define o endereço de rede onde o servidor será executado.
+
+🚀 Criação do Servidor
+const server = createServer((req, res) => {
+ - Parâmetros
+req (IncomingMessage): objeto que contém informações da requisição HTTP.
+res (ServerResponse): objeto utilizado para enviar a resposta ao cliente.
+
+Essa função é executada a cada requisição recebida pelo servidor.
+
+🔗 Processamento da URL
+const url = new URL(req.url, `http://${req.headers.host}`);
+- Descrição
+req.url: contém o caminho da requisição.
+req.headers.host: contém o host da requisição.
+new URL(...): cria um objeto URL completo a partir das informações da requisição.
+Propriedade utilizada
+url.pathname
+Retorna o caminho da URL (ex: /message).
+
+🔀 Roteamento
+if (url.pathname === "/message") {
+    defineRoutes(req, res);
+}
+- Descrição
+Verifica se o caminho da requisição corresponde à rota /message.
+Caso verdadeiro, delega o tratamento da requisição para a função defineRoutes, responsável pela lógica de rotas.
+
+
+❌ Tratamento de Rotas Não Encontradas
+else {
+    res.writeHead(404, { 'content-type': 'text/plain' });
+}
+- Descrição
+Define o código de status HTTP 404 para indicar que a rota não foi encontrada.
+Define o cabeçalho da resposta com o tipo de conteúdo text/plain.
+
+
+▶️ Inicialização do Servidor
+server.listen(port, hostname, () => {
+    console.log(`Server rodando no http://${hostname}:${port}/`);
+});
+- Descrição
+Inicia o servidor HTTP.
+O servidor passa a escutar requisições no endereço e porta definidos.
+A função de callback é executada após a inicialização bem-sucedida do servidor.
+
+🔄 Fluxo de Execução
+Requisição HTTP recebida
+        ↓
+Criação do objeto URL
+        ↓
+Verificação do pathname
+        ↓
+Se "/message" → defineRoutes(req, res)
+        ↓
+Caso contrário → resposta com status 404
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📘 Documentação — routes/chat.routes.js
+- Descrição
+
+O arquivo chat.routes.js é responsável por definir o roteamento das requisições relacionadas ao módulo de chat.
+Ele atua como intermediário entre o servidor (server.js) e o controller, decidindo qual função será executada com base no método HTTP da requisição.
+
+⚙️ Dependências
+import { MessageTreatment } from '../controllers/chat.controller.js';
+- Descrição
+MessageTreatment: função importada do controller responsável por tratar a lógica da requisição de chat.
+
+🔀 Definição de Rotas
+export function defineRoutes(req, res){
+- Parâmetros
+req (IncomingMessage): objeto que contém os dados da requisição HTTP.
+res (ServerResponse): objeto utilizado para enviar a resposta ao cliente.
+
+A função defineRoutes é responsável por analisar o método da requisição e direcionar para o tratamento adequado.
+
+📥 Verificação do Método HTTP
+if(req.method === "POST"){
+    MessageTreatment(req, res);
+}
+- Descrição
+Verifica se o método da requisição é POST.
+Caso verdadeiro, chama a função MessageTreatment, responsável por processar a requisição.
+
+
+❌ Tratamento de Método Não Permitido
+else {
+    res.writeHead(405, {'content-type': 'text/plain'});
+    res.end("Rota errada");
+}
+- Descrição
+Define o código de status HTTP 405 (Method Not Allowed), indicando que o método utilizado não é permitido para esta rota.
+Define o cabeçalho da resposta como text/plain.
+Encerra a resposta enviando a mensagem "Rota errada".
+
+
+🔄 Fluxo de Execução
+Requisição recebida (req, res)
+        ↓
+Verificação do método HTTP
+        ↓
+Se POST → MessageTreatment(req, res)
+        ↓
+Caso contrário → resposta 405 (Method Not Allowed)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📘 Documentação — controllers/chat.controller.js
+- Descrição
+
+O arquivo chat.controller.js é responsável por tratar as requisições recebidas pela rota de chat.
+Ele atua como intermediário entre a camada de rotas e a camada de serviço, sendo responsável por:
+
+Ler e processar o corpo da requisição
+Converter os dados recebidos para formato JSON
+Extrair as informações necessárias
+Chamar o serviço correspondente
+Retornar a resposta ao cliente
+
+
+⚙️ Dependências
+import { buildReturn } from '../service/chat.service.js';
+- Descrição
+buildReturn: função responsável por processar a mensagem recebida e gerar o objeto de resposta.
+
+
+🎮 Função MessageTreatment
+export function MessageTreatment(req, res){
+- Parâmetros
+req (IncomingMessage): objeto contendo os dados da requisição HTTP.
+res (ServerResponse): objeto utilizado para enviar a resposta ao cliente.
+
+
+📥 Leitura do corpo da requisição
+let mensagem = '';
+
+req.on('data', chunk =>{
+    mensagem += chunk;
+})
+- Descrição
+Inicializa a variável mensagem como string vazia.
+O evento data é disparado sempre que um fragmento do corpo da requisição é recebido.
+Cada chunk é concatenado à variável mensagem.
+
+
+📦 Finalização da leitura
+req.on('end', () =>{
+- Descrição
+O evento end é disparado quando todos os dados da requisição foram recebidos.
+A partir desse ponto, o conteúdo completo da requisição está disponível na variável mensagem.
+
+
+🔄 Conversão para JSON
+const mensagemJson = JSON.parse(mensagem);
+- Descrição
+Converte a string recebida em um objeto JavaScript.
+Espera que o corpo da requisição esteja no formato JSON.
+
+
+📌 Extração de dados
+const text = mensagemJson.text;
+- Descrição
+Extrai a propriedade text do objeto recebido.
+Esse valor será utilizado como entrada para o serviço.
+
+
+⚙️ Chamada do serviço
+const returnObj = buildReturn(text);
+- Descrição
+Chama a função buildReturn, responsável por processar o texto.
+O resultado é armazenado em returnObj.
+
+
+📤 Envio da resposta
+res.writeHead(200, {'content-type':'application/json'});
+res.end(JSON.stringify(returnObj));
+- Descrição
+Define o status HTTP 200 (sucesso).
+Define o tipo de conteúdo como application/json.
+Converte o objeto de resposta para string JSON e envia ao cliente.
+
+
+🔄 Fluxo de Execução
+Requisição recebida
+        ↓
+Leitura do body (evento 'data')
+        ↓
+Finalização da leitura (evento 'end')
+        ↓
+Conversão para JSON
+        ↓
+Extração da propriedade "text"
+        ↓
+Chamada de buildReturn(text)
+        ↓
+Envio da resposta em JSON
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📘 Documentação — service/chat.service.js
+- Descrição
+
+O arquivo chat.service.js é responsável por implementar a lógica de processamento da mensagem recebida pelo sistema.
+Ele recebe um texto como entrada e retorna um objeto contendo informações derivadas desse texto.
+
+🎯 Função buildReturn
+export function buildReturn(text){
+- Parâmetros
+text (string): texto recebido da requisição, utilizado como base para o processamento.
+
+
+⚙️ Construção da mensagem
+const msg = `{"Original":"${text}", "Tamanho":${text.length}, "Upper":"${text.toUpperCase()}"}`;
+- Descrição
+
+Uma string no formato JSON é construída utilizando template string.
+
+Propriedades geradas:
+Propriedade	Descrição
+Original ------>	Texto original recebido
+Tamanho	 ------> Quantidade de caracteres do texto (text.length)
+Upper	   ------> Texto convertido para letras maiúsculas (text.toUpperCase())
+
+🔄 Conversão para objeto JSON
+const JsonMsg = JSON.parse(msg);
+- Descrição
+Converte a string JSON armazenada em msg para um objeto JavaScript.
+O resultado é armazenado na variável JsonMsg.
+
+📤 Retorno da função
+return JsonMsg;
+- Descrição
+Retorna o objeto JavaScript contendo as informações processadas da mensagem.
+
+
+🔄 Fluxo de Execução
+Recebe texto (text)
+        ↓
+Cria string JSON com propriedades derivadas
+        ↓
+Converte string para objeto (JSON.parse)
+        ↓
+Retorna objeto resultante
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Conclusão
+
+Este projeto apresenta uma implementação de servidor HTTP utilizando Node.js puro, sem o uso de frameworks, evidenciando de forma clara o funcionamento interno de uma aplicação backend.
+
+A estrutura foi organizada em camadas bem definidas — server, routes, controllers e service — onde cada módulo possui uma responsabilidade específica dentro do fluxo da aplicação. Essa separação permite que o processamento das requisições seja conduzido de forma estruturada, desde o recebimento da requisição HTTP até a geração da resposta final em formato JSON.
+
+O fluxo implementado demonstra, na prática, conceitos fundamentais como:
+
+Criação de servidor HTTP com módulos nativos
+Processamento manual de URL e roteamento
+Manipulação de streams para leitura do corpo da requisição
+Conversão e tratamento de dados em JSON
+Encadeamento de responsabilidades entre camadas
+
+Dessa forma, o projeto serve como uma base sólida para compreensão do funcionamento de aplicações backend, permitindo visualizar de maneira detalhada como cada etapa do processamento ocorre internamente, desde o nível mais baixo da requisição até a resposta enviada ao cliente.

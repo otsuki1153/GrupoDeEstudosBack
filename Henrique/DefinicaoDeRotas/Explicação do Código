@@ -1,0 +1,142 @@
+📘 Documentação — server.js (Definição de Rotas)
+- Descrição
+
+O arquivo server.js implementa um servidor HTTP utilizando Node.js puro, com o objetivo de demonstrar a definição de rotas manualmente, sem o uso de frameworks.
+
+O sistema responde a diferentes URLs (pathname) e métodos HTTP, retornando conteúdos variados como texto, JSON e dados dinâmicos.
+
+⚙️ Dependências
+import { createServer } from 'node:http';
+- Descrição
+createServer: função nativa do Node.js utilizada para criar servidores HTTP.
+
+
+🌐 Configuração do Servidor
+const port = 3000;
+const hostname = '127.0.0.1';
+- Descrição
+port: porta onde o servidor será executado.
+hostname: endereço local onde o servidor estará disponível.
+
+
+🚀 Criação do Servidor
+const server = createServer((req, res) =>{
+- Parâmetros
+req (IncomingMessage): contém os dados da requisição HTTP.
+res (ServerResponse): utilizado para enviar a resposta ao cliente.
+
+Essa função é executada a cada requisição recebida.
+
+🔗 Processamento da URL
+const url = new URL(req.url, `http://${req.headers.host}`);
+- Descrição
+req.url: caminho da requisição.
+req.headers.host: host da requisição.
+new URL(...): cria um objeto URL completo.
+Propriedades utilizadas
+url.pathname
+url.searchParams
+pathname: identifica a rota acessada.
+searchParams: permite acessar parâmetros da URL.
+
+
+🔀 Definição de Rotas
+
+📄 Rota / (Página inicial)
+if(url.pathname === "/" && req.method === "GET"){
+    res.writeHead(200, {'content-type': 'text/plain'});
+    res.end("Bem Vindo(a) ao meu site!!");
+}
+- Descrição
+Método: GET
+Retorna uma mensagem de boas-vindas em texto simples.
+
+📄 Rota /sobre
+else if(url.pathname === "/sobre" && req.method === "GET"){
+    res.writeHead(200,  {'content-type': 'text/plain'});
+    res.end("Estou aprendendo Node JS")
+}
+- Descrição
+Método: GET
+Retorna uma mensagem informativa.
+
+📄 Rota /api
+else if(url.pathname === "/api" && req.method === "GET"){
+    res.writeHead(200, {'content-type': 'application/json'})
+    res.end(JSON.stringify({"nome": "Henrique", "curso": "Back End", "status": "Aprendendo node"}));
+}
+- Descrição
+Método: GET
+Retorna um objeto JSON contendo informações fixas.
+
+📄 Rota /hora
+else if(url.pathname === "/hora" && req.method === "GET"){
+    const agora = new Date();
+
+    res.writeHead(200, {'content-type': 'text/plain'});
+    res.end(agora.toLocaleTimeString())
+}
+- Descrição
+Método: GET
+Cria um objeto Date com o horário atual.
+Retorna a hora no formato local (hora:minuto:segundo).
+
+📄 Rota /saudacao
+else if(url.pathname === "/saudacao" && req.method === "GET"){
+    const name = url.searchParams.get('nome');
+
+    res.writeHead(200, {'content-type': 'text/plain'})
+    res.end(`Ola ${name}`);
+}
+- Descrição
+Método: GET
+Utiliza parâmetros da URL (query params).
+searchParams.get('nome'): obtém o valor do parâmetro nome.
+Retorna uma saudação personalizada.
+Exemplo de uso
+/saudacao?nome=Henrique
+
+Resposta:
+
+Ola Henrique
+❌ Tratamento de Rotas Não Encontradas
+else{
+    res.writeHead(404, {'Content-type': 'text/plain'});
+    res.end("ERRO 404");
+}
+- Descrição
+Retorna status HTTP 404 para rotas não definidas.
+Envia mensagem de erro em texto simples.
+
+
+▶️ Inicialização do Servidor
+server.listen(port, hostname, ()=>{
+    console.log(`Server rodando no http://${hostname}:${port}/`);
+});
+- Descrição
+Inicia o servidor HTTP.
+O servidor passa a escutar requisições no endereço e porta definidos.
+Exibe no terminal a URL de acesso.
+
+
+🔄 Fluxo de Execução
+Requisição HTTP recebida
+        ↓
+Criação do objeto URL
+        ↓
+Verificação de pathname e método HTTP
+        ↓
+Execução da rota correspondente:
+    "/"        → mensagem de boas-vindas
+    "/sobre"   → mensagem informativa
+    "/api"     → resposta JSON
+    "/hora"    → horário atual
+    "/saudacao"→ saudação com parâmetro
+        ↓
+Caso não corresponda → resposta 404
+
+
+📚 Considerações
+
+O código demonstra a definição manual de rotas em Node.js puro, utilizando estruturas condicionais para mapear diferentes caminhos e métodos HTTP.
+Também evidencia o uso de recursos como manipulação de URL, parâmetros de consulta, geração de dados dinâmicos e respostas em múltiplos formatos (texto e JSON).
